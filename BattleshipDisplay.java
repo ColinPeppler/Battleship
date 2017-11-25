@@ -10,13 +10,17 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class BattleshipDisplay extends Application {
-
+	static Ship aircraftCarrier, battleship, cruiser, destroyer, submarine;
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Creates grid for the game
 		GridPane grid = new GridPane();
 		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(1);
+		
+		// Set up the AI's ships
+		setup();
 		
 		// Sets the horizontal 1-10 and vertical heading A-J
 		for(int i = 1; i < 11; i++) {
@@ -52,6 +56,31 @@ public class BattleshipDisplay extends Application {
 		primaryStage.setScene(primaryScene);
 		primaryStage.show();
 		
+		setup();
+		System.out.println(aircraftCarrier);
 	}
-
+	
+	// Creates all 5 ships, finds their direction and position too
+	public static void setup() {
+		aircraftCarrier = new AircraftCarrier();
+		aircraftCarrier.findDirection();
+		aircraftCarrier.setPosition();
+		
+		battleship = new Battleship();
+		battleship.findDirection();
+		battleship.setPosition();
+		
+		cruiser = new Cruiser();
+		cruiser.findDirection();
+		cruiser.setPosition();
+		
+		destroyer = new Destroyer();
+		destroyer.findDirection();
+		destroyer.setPosition();
+		
+		submarine = new Submarine();
+		submarine.findDirection();
+		submarine.setPosition();
+	}
 }
+
