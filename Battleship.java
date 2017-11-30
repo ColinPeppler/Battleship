@@ -1,6 +1,8 @@
 
 public class Battleship extends Ship {
-	public Battleship() {
-		super("Battleship", 4);
+	// I use the number here so that we can indicate which battleship by using numbers
+	// because in the game of Battleship there are 2 battleships
+	public Battleship(int number) {
+		super(String.format("Battleship %d", number), 4);
 	}
 }

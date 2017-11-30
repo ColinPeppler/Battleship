@@ -10,7 +10,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class BattleshipDisplay extends Application {
-	static Ship aircraftCarrier, battleship, cruiser, destroyer, submarine;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -20,7 +19,7 @@ public class BattleshipDisplay extends Application {
 		grid.setHgap(1);
 		
 		// Set up the AI's ships
-		setup();
+		Ship[] ships = setup();
 		
 		// Sets the horizontal 1-10 and vertical heading A-J
 		for(int i = 1; i < 11; i++) {
@@ -36,14 +35,67 @@ public class BattleshipDisplay extends Application {
 		}
 		
 		// Fills the grid with squares
-		for(int row = 1; row < 11; row++) {
-			for(int column = 1; column < 11; column++) {
+		for(int column = 1; column < 11; column++) {
+			final int c = column;	// final variable is used, so that the variable can be accessed inside the lambda expression
+			for(int row = 1; row < 11; row++) {
+				final int r = row;
+				
 				Rectangle gridBox = new Rectangle();
 				gridBox.setStroke(Color.BLACK);
-				gridBox.setFill(Color.WHITE);
+				gridBox.setFill(Color.BLUE);
 				gridBox.setHeight(25);
 				gridBox.setWidth(25);
-				grid.add(gridBox, row, column);
+				grid.add(gridBox, column, row);
+				gridBox.setOnMouseClicked(e -> {
+					Rectangle missBox = new Rectangle();
+					missBox.setStroke(Color.BLACK);
+					missBox.setFill(Color.WHITE);
+					missBox.setHeight(25);
+					missBox.setWidth(25);
+					
+					grid.add(missBox, c, r);
+					
+					System.out.println("Missed");
+					
+				});
+			}
+		}
+		
+		// Adds the ships to the grid
+		for(Ship s : ships) {
+			int rowStart = s.getYInitial();
+			int rowEnd = s.getYFinal();
+			int columnStart = s.getXInitial();
+			int columnEnd = s.getXFinal();
+			
+			for(int column = columnStart; column <= columnEnd; column++) {
+				final int c = column;
+				for(int row = rowStart; row <= rowEnd; row++) {
+					final int r = row;
+					
+					Rectangle shipBox = new Rectangle();
+					shipBox.setStroke(Color.BLACK);
+					shipBox.setFill(Color.GREEN);
+					shipBox.setHeight(25);
+					shipBox.setWidth(25);
+					grid.add(shipBox, column, row);
+					
+					// Lambda expression for when player clicks on box with a ship
+					shipBox.setOnMouseClicked(e -> {
+						Rectangle hitBox = new Rectangle();
+						hitBox.setStroke(Color.BLACK);
+						hitBox.setFill(Color.RED);
+						hitBox.setHeight(25);
+						hitBox.setWidth(25);
+						grid.add(hitBox, c, r);
+						
+						s.damaged();
+						if(s.isDestroyed()) {
+							System.out.println(s.getName() + " is destroyed");
+						}
+					});
+					
+				}
 			}
 		}
 		
@@ -55,32 +107,16 @@ public class BattleshipDisplay extends Application {
 		Scene primaryScene = new Scene(layout, 400, 400);
 		primaryStage.setScene(primaryScene);
 		primaryStage.show();
-		
-		setup();
-		System.out.println(aircraftCarrier);
 	}
 	
-	// Creates all 5 ships, finds their direction and position too
-	public static void setup() {
-		aircraftCarrier = new AircraftCarrier();
-		aircraftCarrier.findDirection();
-		aircraftCarrier.setPosition();
+	// Creates all 5 ships
+	public Ship[] setup() {
+		BattleshipAI bot = new BattleshipAI();
+		System.out.println(bot.getSpaces());
 		
-		battleship = new Battleship();
-		battleship.findDirection();
-		battleship.setPosition();
+		Ship[] ships = bot.getShips();
 		
-		cruiser = new Cruiser();
-		cruiser.findDirection();
-		cruiser.setPosition();
-		
-		destroyer = new Destroyer();
-		destroyer.findDirection();
-		destroyer.setPosition();
-		
-		submarine = new Submarine();
-		submarine.findDirection();
-		submarine.setPosition();
+		return ships;
 	}
 }
 

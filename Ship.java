@@ -9,9 +9,13 @@ public class Ship {
 	private int xFinal = 1;
 	private int yFinal = 1;
 
+	// When constructor is invoked, the name, size are inputed
+	// and the direction and position are randomly found
 	public Ship(String name, int size) {
 		this.name = name;
 		this.size = size;
+		setFacingDirection();
+		setPosition();
 	}
 	
 	// GETTER Methods
@@ -39,12 +43,16 @@ public class Ship {
 		return yFinal;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	// SETTER Methods
 	public void setDirection(String direction) {
 		this.direction = direction;
 	}
 	
-	public void setXInitial(int xInitial) {
+	/*public void setXInitial(int xInitial) {
 		this.xInitial = xInitial;
 	}
 	
@@ -58,10 +66,11 @@ public class Ship {
 	
 	public void setYFinal(int yFinal) {
 		this.yFinal = yFinal;
-	}
+	}*/
 	
 	// increments the number of times the ship gets hit
 	public void damaged() {
+		System.out.println(name + " is hit!");
 		numberOfHits++;
 	}
 
@@ -74,7 +83,7 @@ public class Ship {
 	}
 	
 	// finds a random direction for the ship to face
-	public void findDirection() {
+	private void setFacingDirection() {
 		int directionNumber = (int)(Math.random() * 4);
 		String direction = "";
 		//System.out.println(directionNumber);
@@ -91,10 +100,10 @@ public class Ship {
 				break;
 		}
 		
-		setDirection(direction);
+		this.direction = direction;
 	}
 	
-	public void setPosition() {
+	private void setPosition() {
 		int min = 1;
 		int possibleSpaces = 10 - size;
 		
@@ -126,18 +135,6 @@ public class Ship {
 			xFinal = xInitial + size - 1;
 			yFinal = yInitial;
 		}
-		
-		/*System.out.println(ship);
-		System.out.println(ship.getDirection());
-		System.out.println(xInitial);
-		System.out.println(xFinal);
-		System.out.println(yInitial);
-		System.out.println(yFinal);*/
-		
-		setXInitial(xInitial);
-		setYInitial(yInitial);
-		setXFinal(xFinal);
-		setYFinal(yFinal);
 	}
 
 	@Override
